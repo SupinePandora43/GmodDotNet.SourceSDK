@@ -539,7 +539,7 @@ namespace GmodNET.SourceSDK
 
 		public static class Delegates
 		{
-			[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+			[UnmanagedFunctionPointer(CallingConvention.ThisCall)]
 			public delegate void _PrintSearchPathsDelegate(IntPtr ptr);
 			public delegate void PrintSearchPathsDelegate();
 		}
