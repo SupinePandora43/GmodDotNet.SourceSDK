@@ -478,8 +478,7 @@ namespace GmodNET.SourceSDK
 		{
 			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
 			FileSystemVTable vtable = Marshal.PtrToStructure<FileSystemVTable>(vtablePtr);
-			_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(vtable.PrintSearchPaths);
-			public_printSearchPaths = () => _printSearchPaths(this.ptr);
+			_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.void_IntPtr>(vtable.PrintSearchPaths);
 		}
 
 		#region IBaseFileSystem
@@ -546,15 +545,13 @@ namespace GmodNET.SourceSDK
 		public static class Delegates
 		{
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-			public delegate void PrintSearchPathsDelegate(IntPtr ptr);
-			public delegate void Public_PrintSearchPathsDelegate();
+			public delegate void void_IntPtr(IntPtr ptr);
 		}
 
-		private readonly Delegates.PrintSearchPathsDelegate _printSearchPaths;
-		private readonly Delegates.Public_PrintSearchPathsDelegate public_printSearchPaths;
+		private readonly Delegates.void_IntPtr _printSearchPaths;
 		public void PrintSearchPaths() {
 			Console.WriteLine("calling delegate");
-			public_printSearchPaths();
+			_printSearchPaths(ptr);
 			Console.WriteLine("done");
 		}
 	}
