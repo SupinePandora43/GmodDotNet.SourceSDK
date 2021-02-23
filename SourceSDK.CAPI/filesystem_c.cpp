@@ -147,8 +147,9 @@ DLL_EXPORT void IFileSystem_PrintSearchPaths(IFileSystem* fs) {
 	fs->PrintSearchPaths();
 }
 
-DLL_EXPORT void* GetVTable(void* something) {
-	return *(void***)something;
+DLL_EXPORT void* IFileSystem_AddressOf_PrintSearchPaths_new(IFileSystem* fs) {
+	void** vtable = *(void***)fs;
+	return vtable[80];
 }
 
 DLL_EXPORT void* IFileSystem_AddressOf_PrintSearchPaths(IFileSystem* aClass)
