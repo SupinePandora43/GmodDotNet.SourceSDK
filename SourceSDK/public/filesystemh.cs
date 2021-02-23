@@ -491,8 +491,8 @@ namespace GmodNET.SourceSDK
 
 			Console.WriteLine($"Marshal.Read {IsSteam.ToInt64()}, {MountSteamContent.ToInt64()}, {PrintSearchPaths.ToInt64()}");
 
-			isSteam = Marshal.GetDelegateForFunctionPointer<_bool>(IsSteam);
-			mountSteamContent = Marshal.GetDelegateForFunctionPointer<_FilesystemMountRetval_t>(MountSteamContent);
+			//isSteam = Marshal.GetDelegateForFunctionPointer<_bool>(IsSteam);
+			//mountSteamContent = Marshal.GetDelegateForFunctionPointer<_FilesystemMountRetval_t>(MountSteamContent);
 
 			PrintSearchPaths = IFileSystem_AddressOf_PrintSearchPaths_new(ptr);
 			Console.WriteLine($"exported vtbl function: {PrintSearchPaths.ToInt64()}");
@@ -525,7 +525,7 @@ namespace GmodNET.SourceSDK
 
 		#endregion
 
-		[UnmanagedFunctionPointer(CallingConvention.ThisCall)]
+		/*[UnmanagedFunctionPointer(CallingConvention.ThisCall)]
 		public delegate bool _bool(IntPtr thisPtr);
 		_bool isSteam;
 
@@ -533,7 +533,7 @@ namespace GmodNET.SourceSDK
 
 		[UnmanagedFunctionPointer(CallingConvention.ThisCall)]
 		public delegate FilesystemMountRetval_t _FilesystemMountRetval_t(IntPtr thisPtr, int extraAppId);
-		_FilesystemMountRetval_t mountSteamContent;
+		_FilesystemMountRetval_t mountSteamContent;*/
 
 		//public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => mountSteamContent(ptr, extraAppId);
 
