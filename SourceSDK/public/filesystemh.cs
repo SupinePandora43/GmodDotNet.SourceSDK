@@ -529,19 +529,19 @@ namespace GmodNET.SourceSDK
 		public delegate bool _bool(IntPtr thisPtr);
 		_bool isSteam;
 
-		public bool IsSteam() => isSteam(ptr);
+		//public bool IsSteam() => isSteam(ptr);
 
 		[UnmanagedFunctionPointer(CallingConvention.ThisCall)]
 		public delegate FilesystemMountRetval_t _FilesystemMountRetval_t(IntPtr thisPtr, int extraAppId);
 		_FilesystemMountRetval_t mountSteamContent;
 
-		public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => mountSteamContent(ptr, extraAppId);
+		//public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => mountSteamContent(ptr, extraAppId);
 
 
 
-		//public bool IsSteam() => FileSystem_c.IFileSystem_IsSteam(ptr);
+		public bool IsSteam() => FileSystem_c.IFileSystem_IsSteam(ptr);
 
-		//public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => FileSystem_c.IFileSystem_MountSteamContent(ptr, extraAppId);
+		public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => FileSystem_c.IFileSystem_MountSteamContent(ptr, extraAppId);
 
 		public void AddSearchPath(string path, string pathID, SearchPathAdd_t addType = SearchPathAdd_t.PATH_ADD_TO_TAIL) => FileSystem_c.IFileSystem_AddSearchPath(ptr, path, pathID, addType);
 		public bool RemoveSearchPath(string path, string pathID = null) => FileSystem_c.IFileSystem_RemoveSearchPath(ptr, path, pathID);
