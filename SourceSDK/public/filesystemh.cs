@@ -474,9 +474,6 @@ namespace GmodNET.SourceSDK
 			public IntPtr PrintSearchPaths;
 		}
 
-		[DllImport("sourcesdkc")]
-		internal static extern IntPtr IFileSystem_AddressOf_PrintSearchPaths_new(IntPtr ptr);
-
 		public FileSystem(IntPtr ptr) : base(ptr)
 		{
 			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
