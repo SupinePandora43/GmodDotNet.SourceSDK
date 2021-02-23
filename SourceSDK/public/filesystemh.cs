@@ -467,12 +467,21 @@ namespace GmodNET.SourceSDK
 
 		public const string FILESYSTEM_INTERFACE_VERSION = "VFileSystem022";
 
+		[StructLayout(LayoutKind.Explicit)]
+		private struct FileSystemVTable
+		{
+			[FieldOffset(80)]
+			public IntPtr PrintSearchPaths;
+		}
+
 		[DllImport("sourcesdkc")]
 		internal static extern IntPtr IFileSystem_AddressOf_PrintSearchPaths_new(IntPtr ptr);
 
 		public FileSystem(IntPtr ptr) : base(ptr)
 		{
-			idk = Marshal.GetDelegateForFunctionPointer<Delegates._PrintSearchPathsDelegate>(IFileSystem_AddressOf_PrintSearchPaths_new(ptr));
+			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
+			FileSystemVTable vtable = Marshal.PtrToStructure<FileSystemVTable>(vtablePtr);
+			idk = Marshal.GetDelegateForFunctionPointer<Delegates._PrintSearchPathsDelegate>(vtable.PrintSearchPaths);
 			PrintSearchPaths_yeye = () => idk(this.ptr);
 		}
 
@@ -539,7 +548,7 @@ namespace GmodNET.SourceSDK
 
 		public static class Delegates
 		{
-			[UnmanagedFunctionPointer(CallingConvention.ThisCall)]
+			[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 			public delegate void _PrintSearchPathsDelegate(IntPtr ptr);
 			public delegate void PrintSearchPathsDelegate();
 		}
