@@ -1,3 +1,5 @@
+using BenchmarkDotNet.Attributes;
+using BenchmarkDotNet.Running;
 using GmodNET.API;
 using GmodNET.SourceSDK;
 using GmodNET.SourceSDK.Tier0;
@@ -19,6 +21,8 @@ namespace SourceSDKTest
 		private bool failed = false;
 
 		private IntPtr sourcesdkc = IntPtr.Zero;
+
+		public static FileSystem fsInstance;
 
 		internal void Test(Action action)
 		{
@@ -131,8 +135,11 @@ namespace SourceSDKTest
 						Console.WriteLine(surface.GetTier());
 					}
 
-					fileSystem.PrintSearchPaths_yeye();
+					fsInstance = fileSystem;
 
+					Console.WriteLine(BenchmarkRunner.Run<BenchmarkTest>());
+
+					fsInstance = null;
 					Console.WriteLine("add new path");
 
 					fileSystem.AddSearchPath("garrysmod", "GAME", SearchPathAdd_t.PATH_ADD_TO_HEAD);
@@ -174,6 +181,31 @@ namespace SourceSDKTest
 			{
 				NativeLibrary.Free(sourcesdkc);
 			}
+		}
+
+		[InProcess]
+		public class BenchmarkTest
+		{
+			[Params(1, 1000)]
+			public int N;
+
+			public BenchmarkTest()
+			{
+
+			}
+
+			[Benchmark]
+			public void PrintSearchPaths_DLL_EXPORT()
+			{
+				fsInstance.PrintSearchPaths();
+			}
+
+			[Benchmark]
+			public void PrintSearchPaths_VTABLE()
+			{
+				fsInstance.PrintSearchPaths_yeye();
+			}
+
 		}
 	}
 }
