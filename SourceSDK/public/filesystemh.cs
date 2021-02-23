@@ -468,11 +468,16 @@ namespace GmodNET.SourceSDK
 		public const string FILESYSTEM_INTERFACE_VERSION = "VFileSystem022";
 
 		[DllImport("sourcesdkc")]
-		internal static extern IntPtr IFileSystem_AddressOf_PrintSearchPaths(IntPtr ptr);
+		internal static extern IntPtr GetVTable(IntPtr ptr);
 
 		public FileSystem(IntPtr ptr) : base(ptr)
 		{
-			PrintSearchPaths_yeye = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(IFileSystem_AddressOf_PrintSearchPaths(ptr));
+			IntPtr vtable = GetVTable(ptr);
+			unsafe
+			{
+				void** vtableUnsafe = (void**)vtable.ToPointer();
+				PrintSearchPaths_yeye = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>((IntPtr)vtableUnsafe[80]);
+			}
 		}
 
 		#region IBaseFileSystem
