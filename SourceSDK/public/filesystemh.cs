@@ -521,11 +521,13 @@ namespace GmodNET.SourceSDK
 
 		#endregion
 
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate bool _bool(IntPtr ptr);
 		_bool isSteam;
 
 		public bool IsSteam() => isSteam(ptr);
 
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 		public delegate FilesystemMountRetval_t _FilesystemMountRetval_t(IntPtr ptr, int extraAppId);
 		_FilesystemMountRetval_t mountSteamContent;
 
