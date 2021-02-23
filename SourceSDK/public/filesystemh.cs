@@ -478,7 +478,7 @@ namespace GmodNET.SourceSDK
 		{
 			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
 			FileSystemVTable vtable = Marshal.PtrToStructure<FileSystemVTable>(vtablePtr);
-			printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(Marshal.ReadIntPtr(vtablePtr, 80));
+			printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(vtable.PrintSearchPaths);
 		}
 
 		#region IBaseFileSystem
