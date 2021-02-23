@@ -470,6 +470,10 @@ namespace GmodNET.SourceSDK
 		[StructLayout(LayoutKind.Explicit)]
 		private struct FileSystemVTable
 		{
+			[FieldOffset(22)]
+			public IntPtr IsSteam;
+			[FieldOffset(23)]
+			public IntPtr MountSteamContent;
 			[FieldOffset(80)]
 			public IntPtr PrintSearchPaths;
 		}
@@ -478,7 +482,19 @@ namespace GmodNET.SourceSDK
 		{
 			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
 			FileSystemVTable vtable = Marshal.PtrToStructure<FileSystemVTable>(vtablePtr);
-			_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.void_IntPtr>(vtable.PrintSearchPaths);
+
+			Console.WriteLine($"vtable {vtable.IsSteam.ToInt64()}, {vtable.MountSteamContent.ToInt64()}, {vtable.PrintSearchPaths.ToInt64()}");
+
+			IntPtr IsSteam = Marshal.ReadIntPtr(vtablePtr, 22);
+			IntPtr MountSteamContent = Marshal.ReadIntPtr(vtablePtr, 23);
+			IntPtr PrintSearchPaths = Marshal.ReadIntPtr(vtablePtr, 80);
+
+			Console.WriteLine($"Marshal.Read {IsSteam.ToInt64()}, {MountSteamContent.ToInt64()}, {PrintSearchPaths.ToInt64()}");
+
+			isSteam = Marshal.GetDelegateForFunctionPointer<_bool>(IsSteam);
+			mountSteamContent = Marshal.GetDelegateForFunctionPointer<_FilesystemMountRetval_t>(MountSteamContent);
+
+			//_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.void_IntPtr>(vtable.PrintSearchPaths);
 		}
 
 		#region IBaseFileSystem
@@ -505,9 +521,21 @@ namespace GmodNET.SourceSDK
 
 		#endregion
 
-		public bool IsSteam() => FileSystem_c.IFileSystem_IsSteam(ptr);
+		public delegate bool _bool(IntPtr ptr);
+		_bool isSteam;
 
-		public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => FileSystem_c.IFileSystem_MountSteamContent(ptr, extraAppId);
+		public bool IsSteam() => isSteam(ptr);
+
+		public delegate FilesystemMountRetval_t _FilesystemMountRetval_t(IntPtr ptr, int extraAppId);
+		_FilesystemMountRetval_t mountSteamContent;
+
+		public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => mountSteamContent(ptr, extraAppId);
+
+
+
+		//public bool IsSteam() => FileSystem_c.IFileSystem_IsSteam(ptr);
+
+		//public FilesystemMountRetval_t MountSteamContent(int extraAppId = -1) => FileSystem_c.IFileSystem_MountSteamContent(ptr, extraAppId);
 
 		public void AddSearchPath(string path, string pathID, SearchPathAdd_t addType = SearchPathAdd_t.PATH_ADD_TO_TAIL) => FileSystem_c.IFileSystem_AddSearchPath(ptr, path, pathID, addType);
 		public bool RemoveSearchPath(string path, string pathID = null) => FileSystem_c.IFileSystem_RemoveSearchPath(ptr, path, pathID);
@@ -540,19 +568,6 @@ namespace GmodNET.SourceSDK
 		public void IFileSystem_FindClose(int handle) => FileSystem_c.IFileSystem_FindClose(ptr, handle);
 		public string IFileSystem_FindFirstEx(string wildCard, string pathID, out int handle) => FileSystem_c.IFileSystem_FindFirstEx(ptr, wildCard, pathID, out handle);
 
-		//public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
-
-		public static class Delegates
-		{
-			[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-			public delegate void void_IntPtr(IntPtr ptr);
-		}
-
-		private readonly Delegates.void_IntPtr _printSearchPaths;
-		public void PrintSearchPaths() {
-			Console.WriteLine("calling delegate");
-			_printSearchPaths(ptr);
-			Console.WriteLine("done");
-		}
+		public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
 	}
 }
