@@ -478,8 +478,7 @@ namespace GmodNET.SourceSDK
 		{
 			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
 			FileSystemVTable vtable = Marshal.PtrToStructure<FileSystemVTable>(vtablePtr);
-			idk = Marshal.GetDelegateForFunctionPointer<Delegates._PrintSearchPathsDelegate>(vtable.PrintSearchPaths);
-			PrintSearchPaths_yeye = () => idk(this.ptr);
+			printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(Marshal.ReadIntPtr(vtablePtr, 80));
 		}
 
 		#region IBaseFileSystem
@@ -541,16 +540,15 @@ namespace GmodNET.SourceSDK
 		public void IFileSystem_FindClose(int handle) => FileSystem_c.IFileSystem_FindClose(ptr, handle);
 		public string IFileSystem_FindFirstEx(string wildCard, string pathID, out int handle) => FileSystem_c.IFileSystem_FindFirstEx(ptr, wildCard, pathID, out handle);
 
-		public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
+		//public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
 
 		public static class Delegates
 		{
 			[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-			public delegate void _PrintSearchPathsDelegate(IntPtr ptr);
-			public delegate void PrintSearchPathsDelegate();
+			public delegate void PrintSearchPathsDelegate(IntPtr ptr);
 		}
 
-		public Delegates._PrintSearchPathsDelegate idk;
-		public Delegates.PrintSearchPathsDelegate PrintSearchPaths_yeye;
+		private Delegates.PrintSearchPathsDelegate printSearchPaths;
+		public void PrintSearchPaths() => printSearchPaths(ptr);
 	}
 }
