@@ -472,7 +472,8 @@ namespace GmodNET.SourceSDK
 
 		public FileSystem(IntPtr ptr) : base(ptr)
 		{
-			PrintSearchPaths_yeye = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(IFileSystem_AddressOf_PrintSearchPaths_new(ptr));
+			idk = Marshal.GetDelegateForFunctionPointer<Delegates._PrintSearchPathsDelegate>(IFileSystem_AddressOf_PrintSearchPaths_new(ptr));
+			PrintSearchPaths_yeye = () => idk(this.ptr);
 		}
 
 		#region IBaseFileSystem
@@ -538,9 +539,11 @@ namespace GmodNET.SourceSDK
 
 		public static class Delegates
 		{
+			public delegate void _PrintSearchPathsDelegate(IntPtr ptr);
 			public delegate void PrintSearchPathsDelegate();
 		}
 
+		public Delegates._PrintSearchPathsDelegate idk;
 		public Delegates.PrintSearchPathsDelegate PrintSearchPaths_yeye;
 	}
 }
