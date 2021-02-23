@@ -494,6 +494,9 @@ namespace GmodNET.SourceSDK
 			isSteam = Marshal.GetDelegateForFunctionPointer<_bool>(IsSteam);
 			mountSteamContent = Marshal.GetDelegateForFunctionPointer<_FilesystemMountRetval_t>(MountSteamContent);
 
+			PrintSearchPaths = IFileSystem_AddressOf_PrintSearchPaths_new(ptr);
+			Console.WriteLine($"exported vtbl function: {PrintSearchPaths.ToInt64()}");
+			printSearchPaths = Marshal.GetDelegateForFunctionPointer<_PrintSearchPaths>(PrintSearchPaths);
 			//_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.void_IntPtr>(vtable.PrintSearchPaths);
 			Console.WriteLine("done");
 		}
@@ -571,6 +574,19 @@ namespace GmodNET.SourceSDK
 		public void IFileSystem_FindClose(int handle) => FileSystem_c.IFileSystem_FindClose(ptr, handle);
 		public string IFileSystem_FindFirstEx(string wildCard, string pathID, out int handle) => FileSystem_c.IFileSystem_FindFirstEx(ptr, wildCard, pathID, out handle);
 
-		public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
+		//public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
+
+		[DllImport("sourcesdkc")]
+		private static extern IntPtr IFileSystem_AddressOf_PrintSearchPaths_new(IntPtr ptr);
+
+		[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+		private delegate void _PrintSearchPaths(IntPtr thisPtr);
+
+		private readonly _PrintSearchPaths printSearchPaths;
+
+		public void PrintSearchPaths()
+		{
+			printSearchPaths(ptr);
+		}
 	}
 }
