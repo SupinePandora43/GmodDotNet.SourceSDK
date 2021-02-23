@@ -495,6 +495,7 @@ namespace GmodNET.SourceSDK
 			mountSteamContent = Marshal.GetDelegateForFunctionPointer<_FilesystemMountRetval_t>(MountSteamContent);
 
 			//_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.void_IntPtr>(vtable.PrintSearchPaths);
+			Console.WriteLine("done");
 		}
 
 		#region IBaseFileSystem
