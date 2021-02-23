@@ -467,7 +467,13 @@ namespace GmodNET.SourceSDK
 
 		public const string FILESYSTEM_INTERFACE_VERSION = "VFileSystem022";
 
-		public FileSystem(IntPtr ptr) : base(ptr) { }
+		[DllImport("sourcesdkc")]
+		internal static extern IntPtr IFileSystem_AddressOf_PrintSearchPaths(IntPtr ptr);
+
+		public FileSystem(IntPtr ptr) : base(ptr)
+		{
+			PrintSearchPaths_yeye = Marshal.GetDelegateForFunctionPointer<Delegates.PrintSearchPathsDelegate>(IFileSystem_AddressOf_PrintSearchPaths(ptr));
+		}
 
 		#region IBaseFileSystem
 
@@ -529,5 +535,12 @@ namespace GmodNET.SourceSDK
 		public string IFileSystem_FindFirstEx(string wildCard, string pathID, out int handle) => FileSystem_c.IFileSystem_FindFirstEx(ptr, wildCard, pathID, out handle);
 
 		public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
+
+		public static class Delegates
+		{
+			public delegate void PrintSearchPathsDelegate();
+		}
+
+		public Delegates.PrintSearchPathsDelegate PrintSearchPaths_yeye;
 	}
 }

@@ -131,7 +131,7 @@ namespace SourceSDKTest
 						Console.WriteLine(surface.GetTier());
 					}
 
-					fileSystem.PrintSearchPaths();
+					fileSystem.PrintSearchPaths_yeye();
 
 					Console.WriteLine("add new path");
 
