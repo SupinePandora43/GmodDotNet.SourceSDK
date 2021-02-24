@@ -481,6 +481,9 @@ namespace GmodNET.SourceSDK
 		public FileSystem(IntPtr ptr) : base(ptr)
 		{
 			IntPtr vtablePtr = Marshal.ReadIntPtr(ptr, 0);
+
+			Console.WriteLine($"Marshal vtbl = {vtablePtr.ToInt64()}\nsourcesdkc vtbl = {GetVTable(ptr).ToInt64()}");
+
 			FileSystemVTable vtable = Marshal.PtrToStructure<FileSystemVTable>(vtablePtr);
 
 			Console.WriteLine($"vtable {vtable.IsSteam.ToInt64()}, {vtable.MountSteamContent.ToInt64()}, {vtable.PrintSearchPaths.ToInt64()}");
@@ -575,6 +578,9 @@ namespace GmodNET.SourceSDK
 		public string IFileSystem_FindFirstEx(string wildCard, string pathID, out int handle) => FileSystem_c.IFileSystem_FindFirstEx(ptr, wildCard, pathID, out handle);
 
 		//public void PrintSearchPaths() => FileSystem_c.IFileSystem_PrintSearchPaths(ptr);
+
+		[DllImport("sourcesdkc")]
+		private static extern IntPtr GetVTable(IntPtr ptr);
 
 		[DllImport("sourcesdkc")]
 		private static extern IntPtr IFileSystem_AddressOf_PrintSearchPaths_new(IntPtr ptr);

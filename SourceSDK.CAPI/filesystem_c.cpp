@@ -147,7 +147,20 @@ DLL_EXPORT void IFileSystem_PrintSearchPaths(IFileSystem* fs) {
 	fs->PrintSearchPaths();
 }
 
-DLL_EXPORT void* IFileSystem_AddressOf_PrintSearchPaths_new(IFileSystem* fs) {
+DLL_EXPORT void** GetVTable(void* something) {
+	return *(void***)something;
+}
+
+typedef void*(IFileSystem_PrintSearchPaths_t)(IFileSystem* fs);
+
+DLL_EXPORT IFileSystem_PrintSearchPaths_t* IFileSystem_AddressOf_PrintSearchPaths_new(IFileSystem* fs) {
 	void** vtable = *(void***)fs;
-	return vtable[80];
+	return (IFileSystem_PrintSearchPaths_t*)vtable[80];
+}
+
+
+DLL_EXPORT void* IFileSystem_PrintSearchPaths_delegate(IFileSystem* fs) {
+	return &[fs] {
+		fs->PrintSearchPaths();
+	};
 }
