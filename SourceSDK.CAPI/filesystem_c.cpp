@@ -158,9 +158,3 @@ DLL_EXPORT IFileSystem_PrintSearchPaths_t* IFileSystem_AddressOf_PrintSearchPath
 	return (IFileSystem_PrintSearchPaths_t*)vtable[80];
 }
 
-
-DLL_EXPORT void* IFileSystem_PrintSearchPaths_delegate(IFileSystem* fs) {
-	return &[fs] {
-		fs->PrintSearchPaths();
-	};
-}
