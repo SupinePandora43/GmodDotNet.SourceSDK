@@ -494,7 +494,7 @@ namespace GmodNET.SourceSDK
 			//isSteam = Marshal.GetDelegateForFunctionPointer<_bool>(IsSteam);
 			//mountSteamContent = Marshal.GetDelegateForFunctionPointer<_FilesystemMountRetval_t>(MountSteamContent);
 
-			PrintSearchPaths = IFileSystem_AddressOf_PrintSearchPaths_new(ptr);
+			//PrintSearchPaths = IFileSystem_AddressOf_PrintSearchPaths_new(ptr);
 			Console.WriteLine($"exported vtbl function: {PrintSearchPaths.ToInt64()}");
 			printSearchPaths = Marshal.GetDelegateForFunctionPointer<_PrintSearchPaths>(PrintSearchPaths);
 			//_printSearchPaths = Marshal.GetDelegateForFunctionPointer<Delegates.void_IntPtr>(vtable.PrintSearchPaths);
