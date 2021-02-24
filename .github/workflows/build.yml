@@ -31,6 +31,8 @@ jobs:
       with:
         submodules: recursive
     - uses: ilammy/msvc-dev-cmd@v1
+    - run: set CC=clang
+    - run: set CXX=clang++
     - name: 'CMake'
       uses: lukka/run-cmake@v2
       with:
